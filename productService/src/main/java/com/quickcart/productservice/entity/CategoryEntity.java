@@ -7,7 +7,7 @@ public class CategoryEntity {
     @Id
     @Column(name = "c_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long categoryId;
 
     @Column(name = "c_title")
     private String title;
@@ -16,16 +16,16 @@ public class CategoryEntity {
     }
 
     public CategoryEntity(long id, String title) {
-        this.id = id;
+        this.categoryId = id;
         this.title = title;
     }
 
     public long getId() {
-        return id;
+        return categoryId;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.categoryId = id;
     }
 
     public String getTitle() {
