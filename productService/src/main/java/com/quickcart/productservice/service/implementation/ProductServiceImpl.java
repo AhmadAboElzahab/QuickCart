@@ -3,10 +3,12 @@ package com.quickcart.productservice.service.implementation;
 import com.quickcart.productservice.entity.ProductEntity;
 import com.quickcart.productservice.repository.ProductRepository;
 import com.quickcart.productservice.service.ProductService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ProductServiceImpl implements ProductService {
     final ProductRepository productRepository;
 
