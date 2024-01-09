@@ -1,10 +1,10 @@
-package com.quickcart.gateway;
+package com.example.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GatewayApplicationTests {
+class DemoApplicationTests {
 
     @Test
     void contextLoads() {
