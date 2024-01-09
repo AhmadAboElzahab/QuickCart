@@ -1,14 +1,22 @@
 const express = require("express");
 const Eureka = require("eureka-js-client").Eureka;
+const mongoose = require("mongoose");
+const User = require("./routes/user");
+const bodyParser = require("body-parser");
 
 const app = express();
+
 const port = 3000;
 
-// Set up Eureka client
+app.use(express.json());
+
+app.use("/service/", User);
+
+require("dotenv").config();
 const client = new Eureka({
   instance: {
-    instanceId: "userService", // replace with a unique identifier for your service
-    app: "userService", // replace with your service name
+    instanceId: "userService",
+    app: "userService",
     hostName: "localhost",
     ipAddr: "127.0.0.1",
     port: {
@@ -22,20 +30,22 @@ const client = new Eureka({
     },
   },
   eureka: {
-    host: "localhost", // replace with your Eureka server host
-    port: 8761, // replace with your Eureka server port
+    host: "localhost",
+    port: 8761,
     servicePath: "/eureka/apps/",
   },
 });
-app.get("/test", (req, res) => {
-  res.json({ message: "Hello from your service!" });
-});
 
 client.start((error) => {
-  console.error(error || "Eureka registration complete");
-
-  // Start your Express app after successfully registering with Eureka
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
+  mongoose.set("strictQuery", false);
+  mongoose
+    .connect(process.env.DB_CONNECT)
+    .then(() => {
+      app.listen(3000, () => {
+        console.log(`Coneected on http://localhost:3000}/`);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
