@@ -57,7 +57,7 @@ async function pay(req, res) {
     const { email, securityCode, amount } = req.body;
     const user = await User.findOne({ email });
     if (user.SecurityCode != securityCode) {
-      return res.status(400).json({ error: "security code is incorrect" });
+      return res.status(400).json({ message: "security code is incorrect" });
     }
     if (!user) {
       return res
@@ -65,17 +65,14 @@ async function pay(req, res) {
         .json({ error: "User not found or security code is incorrect" });
     }
     if (amount <= 0 || amount > user.balance) {
-      return res.status(400).json({ error: "Invalid withdrawal amount" });
+      return res.status(400).json({ message: "Invalid  amount" });
     }
     user.balance -= amount;
     await user.save();
-
-    // Respond with the updated user object
-    res.status(200).json({ message: "Withdrawal successful", user });
+    res.status(200).json({ message: "Withdrawal successful" });
   } catch (error) {
-    // Handle any errors that occur during the process
     console.error("Error withdrawing funds:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 module.exports = {
