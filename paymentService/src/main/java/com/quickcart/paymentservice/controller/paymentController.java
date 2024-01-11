@@ -1,10 +1,8 @@
 package com.quickcart.paymentservice.controller;
 
 
-import com.quickcart.paymentservice.model.Message;
-import com.quickcart.paymentservice.model.paymentRequestModel;
-import com.quickcart.paymentservice.model.paymentResponseModel;
-import com.quickcart.paymentservice.model.productModel;
+import com.quickcart.paymentservice.model.*;
+import com.quickcart.paymentservice.service.mailService;
 import com.quickcart.paymentservice.service.payService;
 import com.quickcart.paymentservice.service.productService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,8 @@ public class paymentController {
     productService productService1;
     @Autowired
     payService pay1;
+    @Autowired
+    private mailService mail;
 
     @PostMapping
     public Message pay(@RequestBody paymentResponseModel requestBody) {
@@ -31,14 +31,27 @@ public class paymentController {
             double price = product.getPrice();
             paymentRequestModel paymentRequest = new paymentRequestModel(email, code, (long) price);
 
+            mailModel m = new mailModel(email, price);
             String result = pay1.getProduct(paymentRequest);
 
-            // Check if the result is null and provide a default message
-            String message = (result != null) ? result : "Empty response message";
 
-            return new Message(message);
+
+          if(result != null) {
+if(result=="Success"){
+    String sendEmail = mail.sendEmail(m);
+}
+              return new Message(result);
+
+          }
+
+          else {
+
+              return new Message(result);
+          }
+
+
         } catch (Exception e) {
-            // Log the exception or handle it according to your application's needs
+
             return new Message("Error processing payment: " + e.getMessage());
         }
     }
